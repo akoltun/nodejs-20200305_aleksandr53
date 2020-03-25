@@ -57,8 +57,13 @@ server.on('request', (req, res) => {
         // finish happens even in case of error, befor error event.
         // Starting from Node 12.13 there is only error event (no finish)
         // if error happened, therefore it is possible to use finish event
+
+        // Node 12.04 doesn't have writableFinished on writable stream
+        // so have to call end again. Feeling a little like dirty workaround
+        // because in case of error end was already called before
         fileStream.on('close', () => {
-          if (fileStream.writableFinished) endResponse(201);
+          // if (fileStream.writableFinished) endResponse(201);
+          endResponse(201);
         });
 
         req.on('aborted', () => {
