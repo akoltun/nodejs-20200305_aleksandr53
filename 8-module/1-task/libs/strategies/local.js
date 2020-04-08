@@ -9,6 +9,9 @@ module.exports = new LocalStrategy(
         if (!user) {
           return done(null, false, 'Нет такого пользователя');
         }
+      if (user.verificationToken) {
+        return done(null, false, 'Подтвердите email');
+      }
 
         const isValidPassword = await user.checkPassword(password);
 
